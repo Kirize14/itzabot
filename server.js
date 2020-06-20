@@ -4,6 +4,8 @@ const client = new Discord.Client();
 
 const config = require("./config.json");
 
+let talkedRecently = new Set();
+
 client.on('message', message => {
     
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
@@ -13,6 +15,22 @@ client.on('message', message => {
     if (message.author.bot) return;
 
     if (!message.content.startsWith(config.prefix)) return;
+    
+    if (talkedRecently.has(message.author.id)) {
+
+        message.channel.send(‘shhhhh please wait before using another command’)
+
+        return;
+
+    }
+
+    talkedRecently.add(message.author.id);
+
+    setTimeout ( () => {
+
+        talkedRecently.delete(message.author.id);
+
+    }, 3000);
 
     try {
 
